@@ -4,8 +4,8 @@ function setup() {
   $( function() { 
     $("#navbar").load("navbar.html");
     $("#myCarousel").load("carousel.html");
-    // $("#post1").load("post1.html");
-    // $("#footer").load("footer.html");
+    $("#post1-description").load("post1_description.html");
+    $("#footer").load("footer.html");
   });
 }
 

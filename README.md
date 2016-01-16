@@ -1,0 +1,2 @@
+# CompetidevBlog
+competidev.com

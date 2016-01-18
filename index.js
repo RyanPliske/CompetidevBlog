@@ -2,7 +2,7 @@
 
 function setup() {
   $( function() { 
-    $("#navbar").load("navbar.html");
+    $("#myNavbar").load("navbar.html");
     setupCarousel();
     requestPost1Description();
     $("#footer").load("footer.html");

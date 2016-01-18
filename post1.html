@@ -11,10 +11,32 @@
 	  	When I first started using Git, I used GitHub's GUI. A GUI is software that someone has engineered in order to provide a user with a familiar user interface full of graphical icons and visual indicators as opposed to a text-based command line interface (CLI). Windows is a GUI on top of the MS-DOS command line. In order to spare users from a steep learning curve full of memorizing commands and hard to debug errors, GUIs were developed. 
 	  </p>
 	  <p class="lead">
-	  	The GitHub GUI in particular worked for me as a beginner. It did a decent job satisfying my basic needs, but it's very limited, especially in a team-based setting. It also hides the real inner workings of Git that you need to be exposed to if you're going to develop software professionally. There are many advanced Git techniques capable via the command line, but this blog will just go over the basics to get you started. Let the training begin Luke.
+	  	The GitHub GUI in particular worked for me as a beginner. It did a decent job satisfying my basic needs, but it's very limited, especially in a team-based setting. It also hides the real inner workings of Git that you need to be exposed to if you're going to develop software professionally. There are many advanced Git techniques capable via the command line, but this blog will just go over the basics. Let the training begin Luke.
 	  <p class="lead">
-	  	In order to begin, you need to install git to your command line. On Mac this can either be done by simply downloading Xcode or by going <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">here</a>. You'll know you're ready to rock and roll when you type in "git --version" in terminal and terminal responds with your version of git you have installed. 
+	  	In order to begin, you need to install git to your command line. On Mac this can either be done by simply downloading Xcode or by going <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">here</a>. You'll know you're ready to rock and roll when you type in "git --version" and terminal responds with your version of git you have installed. For me, terminal responds with "git version 2.5.4 (Apple Git-61).""
 	  </p>
+	  <p class="lead">
+	  	Let's Rock. 
+	  </p>
+	  <blockquote>
+	  	<b>How To Init with Existing Project</b></br>
+	  	cd into the directory</br>
+	  	git init</br>
+	  	git add .</br>
+	  	git commit -m "Initial Commit or whatever message"</br>
+	  </blockquote>
+	  <p class="lead">
+	  	Boom done. Now you have a git repo on your local computer. The next step is to setup a remote server. I personally use GitHub, but there are others out there like GitLab, BitBucket, etc. I do this so that I can pull my repository from any computer in the world including my iPhone. If my laptop goes down in flames, there's no way I'm letting my code go down with it.
+	  </p>
+	  <p class="lead">
+	  	Whichever you choose there's some way you can create a new repository. I'm not going to list instructions because 1. It's easily <i>Googleable</i> and 2. I don't now which server you'll end up using. But once you do setup your repo, you'll find a URL that links to it. You'll need to <i>copy</i> it. Go back to terminal and try:
+	  </p>
+	  <blockquote>
+	  	<b>How To Push Existing Repo To Remote Server</b></br>
+	  	git remote add origin &lt;copy and paste repo URL here&gt;</br>
+	  	git push origin master</br>
+	  	<i>(origin means to server and master is the branch you want to push to)</i></br>
+	  </blockquote>
 	  <a class="lead" id="post1-link">Less...</a>
 	</div>
 </div>

@@ -37,6 +37,15 @@ body {
   width: auto;
 }
 
+.navbar-myTitle {
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
+    color: white;
+}
+
 
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */

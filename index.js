@@ -5,7 +5,7 @@ function setup() {
     $("#myNavbar").load("navbar.html");
     setupCarousel();
     requestPost1Description();
-    $("#footer").load("footer.html");
+    $("#footer").load("footer.html", setupAutoScroll);
   });
 }
 
@@ -36,5 +36,11 @@ var setupCarousel = function() {
       }
       requestPost1WithCompletion(completion);
     });
+  });
+}
+
+var setupAutoScroll = function() {
+  $("#scrollToTop").click( function() {
+    $('html, body').animate({scrollTop: '0px'}, 300);
   });
 }

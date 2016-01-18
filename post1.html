@@ -29,14 +29,61 @@
 	  	Boom done. Now you have a git repo on your local computer. The next step is to setup a remote server. I personally use GitHub, but there are others out there like GitLab, BitBucket, etc. I do this so that I can pull my repository from any computer in the world including my iPhone. If my laptop goes down in flames, there's no way I'm letting my code go down with it.
 	  </p>
 	  <p class="lead">
-	  	Whichever you choose there's some way you can create a new repository. I'm not going to list instructions because 1. It's easily <i>Googleable</i> and 2. I don't now which server you'll end up using. But once you do setup your repo, you'll find a URL that links to it. You'll need to <i>copy</i> it. Go back to terminal and try:
+	  	Whichever you choose there's some way you can create a new repository. I'm not going to list instructions, but once you do setup your repo, you'll find a URL that links to it. You'll need to <i>copy</i> it. Go back to terminal and try:
 	  </p>
 	  <blockquote>
 	  	<b>How To Push Existing Repo To Remote Server</b></br>
+	  	cd into the directory
 	  	git remote add origin &lt;copy and paste repo URL here&gt;</br>
+	  	&nbsp;&nbsp;&nbsp;-Mine looks like this: git@github.com:me/name.git</br>
+	  	&nbsp;&nbsp;&nbsp;-<b>Note:</b> This is through SSH keys. the same can be accomplished via HTTPS.</br>
 	  	git push origin master</br>
-	  	<i>(origin means to server and master is the branch you want to push to)</i></br>
+	  	&nbsp;&nbsp;&nbsp;-origin means to server and master is the branch you want to push to</br>
 	  </blockquote>
+	  <p class="lead">
+	  	Alternatively, you can clone an existing repository from a server. Your teammates will have to do this if you're the person who initially setup the repo.
+	  </p>
+	  <blockquote>
+	  	<b>How To Clone Existing Repo From Remote Server</b></br>
+	  	cd into the directory
+	  	git clone &lt;copy and paste repo URL here&gt; &lt;. (optional)&gt;
+	  </blockquote>
+	  <p class="lead">
+	  	A common problem with this approach is it forces you to create a new directory. Sometimes I want it to be in the same directory that I'm in. You can do this by simply adding the optional period at the end of the command. Additionally you'll want to configure some things, mainly your username and learn how to do some other things. I'm just going to casually post them below.
+	  </p>
+	  <blockquote>
+	  	<b>Show Git Username</b></br>
+	  	git config user.name</br>
+	  	OR</br>
+	  	git config --list</br>
+	  	<b>Change Git Username</b></br>
+	  	git config --global user.name</br>
+	  	<b>How to Make a New Branch</b></br>
+	  	git checkout -b &lt;branchName&gt;</br>
+	  	<b>How to Reset a branch equal to another branch</b></br>
+	  	git reset --hard &lt;branchName&gt;</br>
+	  	<b>How to Amend a Commit</b></br>
+	  	git commit --amend</br>
+	  	<b>How to Amend the Author of a Commit</b></br>
+	  	git commit --amend --author="Author Name"</br>
+	  	<b>If needed, push that commit to the server</b></br>
+	  	git push --force</br>
+	  	<b>Delete Remote Git Tag</b></br>
+	  	<i>For Example: a tag named "12345"</i></br>
+	  	git tag -d 12345</br>
+	  	git push origin :refs/tags/12345</br>
+	  	<b>Show what branches exist on your local machine</b></br>
+	  	git branch</br>
+	  	<b>Show what branches exist on the server</b></br>
+	  	git branch -a</br>
+	  	<b>Grab all the branches and bring them to your local machine</b></br>
+	  	git fetch</br>
+	  	<b>Grab all recent changes from server and commit your local changes</b></br>
+	  	git pull</br>
+	  </blockquote>
+	  <p class="lead">
+	  	Now that we've covered the basics, I do personally use <a href="https://www.sourcetreeapp.com/" target="_blank">SourceTree</a> by Atlassian. It is the best Git GUI Client that I've come across. I strongly recommend you pick it up. Additionally I do have another more specialized blog about <b>Git Ignores</b> for when dealing with iOS applications. Git Ignores allow you to ignore files that will exist in your local repository, but won't be pushed to the server. You'll definitely want to check that out <a href="http://ryanpliske.com/" target="_blank">here</a>.
+	  </p>
 	  <a class="lead" id="post1-link">Less...</a>
 	</div>
 </div>

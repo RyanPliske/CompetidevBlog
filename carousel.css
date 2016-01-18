@@ -7,6 +7,10 @@ body {
   color: #5a5a5a;
 }
 
+.indent {
+  text-indent: 25px;
+}
+
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */

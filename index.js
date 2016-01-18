@@ -16,14 +16,14 @@ var highlight = function() {
 };
 
 var requestPost1WithCompletion = function(completion) {
-  $("#post1-description").load("post1.html", function() {
+  $("#post1").load("post1.html", function() {
     $("#post1-link").click(requestPost1Description);
     completion();
   });
 };
 
 var requestPost1Description = function() {
-  $("#post1-description").load("post1_description.html", function() {
+  $("#post1").load("post1_description.html", function() {
     $("#post1-description-link").click(requestPost1WithCompletion);
   });
 }
@@ -32,7 +32,7 @@ var setupCarousel = function() {
   $("#myCarousel").load("carousel.html", function() {
     $("#carouselPost1Button").click( function() {
       var completion = function() {
-        document.getElementById("post1-description").scrollIntoView();
+        document.getElementById("post1").scrollIntoView();
       }
       requestPost1WithCompletion(completion);
     });

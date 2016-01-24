@@ -1,10 +1,79 @@
 <hr class="featurette-divider">
-<h2 class="featurette-heading">Saving Asynchronously with Core Data</h2>
+<h2 class="featurette-heading">Core Data Asynchronously</h2>
 <h4>by <a href="http://ryanpliske.com/" target = "_blank">Ryan Pliske</a> on January 24, 2016</h4>
 <p class="lead">
 	When developing a web app, your database will most likely be on the same server your web app is. Even if it's not you're still pretty much guaranteed your user has an internet connection. In mobile development, this is not the case. 
 </p>
 <p class="lead">
-	blah blah 
+	Because your users on a mobile device can be completely cut off from your database, you most likely will need to also have a local database on your smart phone. When developing iOS applications you have a plethera of options to choose from. Parse is a framework developed by Facebook which does a ton for you. It is capable of managing both a local data store and a server database. You may need to write the "syncing" between the two, but any network failures are automatically retried. It's pretty powerful. 
 </p>
+<p class="lead">
+	You also have FMDB available to you. <a href="https://www.objc.io/issues/4-core-data/SQLite-instead-of-core-data/" taret="_blank">Here</a> is a great article about FMDB vs. Core Data. tl;dr (Too Long Didn't Read), if you aren't storing hundreds of thousands of records of data, then Core Data is a good fit. But if you have let's say 500,000 users all storing lots of data, Core Data probably isn't the best tool. I would then recommend FMDB. 
+</p>
+<p class="lead">
+	For most cases though Core Data is a good framework. I was hesitant to use it initially because podcast after podcast warned me of how badly I could mess up if I didn't know what I was doing. They reffered me to use an open-sourced framework <a href="https://github.com/magicalpanda/MagicalRecord" target="_blank">Magical Record</a> which was built to simplify Core Data. But I personally, don't want things simplified. I actually enjoy a challenge. I want to know how everything works. I've checked out their code, but I'm still not interested. Furthermore, I've grown to not trust any open sourced code on GitHub. 
+</p>
+<p class="lead">
+	Let me explain. I think GitHub is a great place to <i>display</i> your implementations. It'll give the community the right direction to go, but I am hesitant to actually use any of those frameworks in my production code.  For Example, AFNetworking was hacked, and then 14,000 apps in the App Store, who forked the repository were all now vulnerable to attack. I've seen it happen time and time again. In summary, it's just more fun to learn how things work in order to implement my own flavor of things. 
+</p>
+<p class="lead">
+	Now, before we start, I want to share with you a <a href="https://www.evernote.com/shard/s448/sh/01cec4db-c9b3-47b0-b8a9-3095ad6c12de/1ab2305e0ebd3f307342561835da15b4" target ="_blank">Core Data Cheat Sheet</a> that I made. I highly suggest you download it. Now to save asynchronously with Core Data, I'm sure there are multiple ways of doing it (as that's true with all code), but I've posted my implementation on Github <a href="https://github.com/RyanPliske/coreDataSpike" target="_blank">Here</a>. There's actually some pretty fancy code in there because I was simply just playing around. I'll admit I got a little too fancy in some places, but if you want to see some <i>Swifty</i> functional programming, checkout the code.
+</p>
+<p class="lead">
+	This iOS app that I made simply creates random "iPhone devices" and stores them to an SQL-Lite database on the device. The DevicePersistence object takes responsibility of actually writing the "iPhone Device" information (like device type: iPhone 4s, 5, 5s etc.) to disk using the Core Data framework.
+</p>
+<pre><code class="swift code">class DevicePersistence {
+
+    weak var delegate: DevicePersistenceDelegate?
+
+    init(context: NSManagedObjectContext, storeCoordinator: NSPersistentStoreCoordinator) {
+        self.context = context
+        self.storeCoordinator = storeCoordinator
+    }
+
+    private enum DeviceEntityAttributes: String {
+        case DeviceNumber = "deviceNumber"
+        case DeviceType = "deviceType"
+    }
+
+    func grabDevicesFromBackground() {
+
+        let privateContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        privateContext.persistentStoreCoordinator = storeCoordinator
+        privateContext.performBlock { [unowned self]() -> Void in
+            do {
+                let results = try privateContext.executeFetchRequest(self.deviceFetchRequest) as! [NSManagedObject]
+                self.delegate?.devicesReturnedFromBackground(self.transformedResults(results))
+            } catch {
+                self.delegate?.devicesFailedToReturn("There was a fetch error!")
+            }
+        }
+    }
+
+    private func transformedResults(results: [NSManagedObject]) -> [Device] {
+        var devices = [Device]()
+        for result in results {
+            if let deviceType = result.valueForKey(DeviceEntityAttributes.DeviceType.rawValue) as? String,
+                deviceNumber = result.valueForKey(DeviceEntityAttributes.DeviceNumber.rawValue) as? Int {
+                    devices.append(Device(deviceNumber: deviceNumber, deviceType: deviceType))
+            }
+        }
+        return devices
+    }
+}
+</code></pre>
+<p class="lead">
+	Now when I retrieve my objects from the database I want to retrieve them asynchronously as to not disturb my app's User Interface. I do this by calling grabDevicesFromBackground() which sends off an asynchronous closure or block of code to be dealt with off the main thread. The object that manages this block of code is a privateContext of .PrivateQueueConcurrencyType. Now you might ask which thread? It's random. Try running it and setting a breakpoint there. You'll see it gets called from a different thread quite often. This simply grabs the results or returns a failure and it'll notify a separate object, my model, of that result. If I actually do get my devices back, DevicePersistence also transforms them to Device objects so my model doesn't have to deal with that.
+</p>
+<p class="lead">
+	Furthermore, you can register an object that owns your Core Data Stack to deal with saving Asynchronously in order to update the main context. I personally didn't do it in my spike, but here is how you might accomplish this. 
+</p>
+<pre><code class="swift code">
+NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil) { 
+    (notification) -> Void in
+    if (notification.object as? NSManagedObjectContext != self.coreDataManager?.managedObjectContext) {
+        self.coreDataManager?.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
+    }
+}
+</code></pre>
 <a class="lead" id="post2-link">Less...</a>

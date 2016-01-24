@@ -25,6 +25,7 @@ var requestPost1WithCompletion = function(completion) {
 
 var requestPost2WithCompletion = function(completion) {
   $("#post2").load("post2.html", function() {
+    highlight();
     $("#post2-link").click(requestPost2Description);
     completion();
   });

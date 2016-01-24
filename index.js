@@ -1,5 +1,7 @@
 "use strict";
 
+var queryString = window.location.search.substring(1);
+
 function setup() {
   $( function() { 
     $("#myNavbar").load("navbar.html");
@@ -7,8 +9,9 @@ function setup() {
     requestPost1Description();
     requestPost2Description();
     $("#footer").load("footer.html", setupAutoScroll);
+    checkURL();
   });
-}
+};
 
 var highlight = function() {
   $('pre code').each(function(i, block) {
@@ -35,13 +38,13 @@ var requestPost1Description = function() {
   $("#post1").load("post1_description.html", function() {
     $("#post1-description-link").click(requestPost1WithCompletion);
   });
-}
+};
 
 var requestPost2Description = function() {
   $("#post2").load("post2_description.html", function() {
     $("#post2-description-link").click(requestPost2WithCompletion);
   });
-}
+};
 
 var setupCarousel = function() {
   $("#myCarousel").load("carousel.html", function() {
@@ -58,10 +61,24 @@ var setupCarousel = function() {
       requestPost2WithCompletion(completion);
     });
   });
-}
+};
 
 var setupAutoScroll = function() {
   $("#scrollToTop").click( function() {
     $('html, body').animate({scrollTop: '0px'}, 300);
   });
-}
+};
+
+var checkURL = function() {
+  if (queryString == "post2")
+    var completion = function() {
+      document.getElementById("post2").scrollIntoView();
+    };
+    requestPost2WithCompletion(completion);
+
+  if (queryString == "post1")
+    var completion = function() {
+      document.getElementById("post1").scrollIntoView();
+    };
+    requestPost1WithCompletion(completion);
+};

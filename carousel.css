@@ -25,14 +25,19 @@ body {
 }
 
 /* Flip around the padding for proper display in narrow viewports */
+/* Targets the container after the navbar wrapper */
 .navbar-wrapper > .container {
   padding-right: 0;
   padding-left: 0;
 }
+
 .navbar-wrapper .navbar {
   padding-right: 15px;
   padding-left: 15px;
 }
+
+/* Spaces mean hierarchy */
+
 .navbar-wrapper .navbar .container {
   width: auto;
 }

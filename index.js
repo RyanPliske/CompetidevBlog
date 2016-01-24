@@ -1,15 +1,17 @@
 "use strict";
 
-var queryString = window.location.hash;
+var queryString = window.location.hash.substring(1);
 
 function setup() {
   $( function() { 
     $("#myNavbar").load("navbar.html");
-    setupCarousel();
-    requestPost1Description();
-    requestPost2Description();
     $("#footer").load("footer.html", setupAutoScroll);
-    checkURL();
+    setupCarousel();
+    requestPost1DescriptionWithCompletion(function() {
+      requestPost2DescriptionWithCompletion(function() {
+        checkURL();
+      });
+    });
   });
 };
 
@@ -21,7 +23,7 @@ var highlight = function() {
 
 var requestPost1WithCompletion = function(completion) {
   $("#post1").load("post1.html", function() {
-    $("#post1-link").click(requestPost1Description);
+    $("#post1-link").click(requestPost1DescriptionWithCompletion);
     completion();
   });
 };
@@ -29,20 +31,22 @@ var requestPost1WithCompletion = function(completion) {
 var requestPost2WithCompletion = function(completion) {
   $("#post2").load("post2.html", function() {
     highlight();
-    $("#post2-link").click(requestPost2Description);
+    $("#post2-link").click(requestPost2DescriptionWithCompletion);
     completion();
   });
 };
 
-var requestPost1Description = function() {
+var requestPost1DescriptionWithCompletion = function(completion) {
   $("#post1").load("post1_description.html", function() {
     $("#post1-description-link").click(requestPost1WithCompletion);
+    completion();
   });
 };
 
-var requestPost2Description = function() {
+var requestPost2DescriptionWithCompletion = function(completion) {
   $("#post2").load("post2_description.html", function() {
     $("#post2-description-link").click(requestPost2WithCompletion);
+    completion();
   });
 };
 
@@ -70,17 +74,13 @@ var setupAutoScroll = function() {
 };
 
 var checkURL = function() {
-  if (queryString == "post2") {
-    var completion = function() {
-      document.getElementById("post2").scrollIntoView();
-    };
-    requestPost2WithCompletion(completion);
+  if (queryString.localeCompare("post2") == 0) {
+    document.getElementById("post2").scrollIntoView();
+    // alert(queryString);
   }
 
-  if (queryString == "post1") {
-    var completion = function() {
-      document.getElementById("post1").scrollIntoView();
-    };
-    requestPost1WithCompletion(completion);
+  if (queryString.localeCompare("post1") == 0) {
+    document.getElementById("post1").scrollIntoView();
+    // alert(queryString);
   }
 };

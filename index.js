@@ -5,6 +5,7 @@ function setup() {
     $("#myNavbar").load("navbar.html");
     setupCarousel();
     requestPost1Description();
+    requestPost2Description();
     $("#footer").load("footer.html", setupAutoScroll);
   });
 }
@@ -22,9 +23,22 @@ var requestPost1WithCompletion = function(completion) {
   });
 };
 
+var requestPost2WithCompletion = function(completion) {
+  $("#post2").load("post2.html", function() {
+    $("#post2-link").click(requestPost2Description);
+    completion();
+  });
+};
+
 var requestPost1Description = function() {
   $("#post1").load("post1_description.html", function() {
     $("#post1-description-link").click(requestPost1WithCompletion);
+  });
+}
+
+var requestPost2Description = function() {
+  $("#post2").load("post2_description.html", function() {
+    $("#post2-description-link").click(requestPost2WithCompletion);
   });
 }
 
@@ -35,6 +49,12 @@ var setupCarousel = function() {
         document.getElementById("post1").scrollIntoView();
       }
       requestPost1WithCompletion(completion);
+    });
+    $("#carouselPost2Button").click( function() {
+      var completion = function() {
+        document.getElementById("post2").scrollIntoView();
+      }
+      requestPost2WithCompletion(completion);
     });
   });
 }

@@ -1,6 +1,6 @@
 "use strict";
 
-var queryString = window.location.search.substring(1);
+var queryString = window.location.hash;
 
 function setup() {
   $( function() { 
@@ -70,15 +70,17 @@ var setupAutoScroll = function() {
 };
 
 var checkURL = function() {
-  if (queryString == "post2")
+  if (queryString == "post2") {
     var completion = function() {
       document.getElementById("post2").scrollIntoView();
     };
     requestPost2WithCompletion(completion);
+  }
 
-  if (queryString == "post1")
+  if (queryString == "post1") {
     var completion = function() {
       document.getElementById("post1").scrollIntoView();
     };
     requestPost1WithCompletion(completion);
+  }
 };

@@ -16,29 +16,35 @@ function setup() {
   });
 };
 
-var ryansButtonTapped = function() {
-  var ryansInfo = $("#ryans-info");
-  if (ryansInfo.hasClass("hidden")) {
-    ryansInfo.className = document.getElementById("ryans-info").classList.remove("hidden");
-    document.getElementById("ryans-bio").classList.add("hidden");
-    $("#ryans-button").text("View Bio");
-  } else {
-    $("#ryans-bio").className = document.getElementById("ryans-bio").classList.remove("hidden");
-    document.getElementById("ryans-info").classList.add("hidden");
-    $("#ryans-button").text("View Info");
+var handleTapForName = function(developersName) {
+  var infoString = developersName + "-info";
+  var bioString = developersName + "-bio";
+  if ($("#" + infoString).hasClass("hidden")) {
+    $("#" + infoString).className = document.getElementById(infoString).classList.remove("hidden");
+    document.getElementById(bioString).classList.add("hidden");
+    $("#" + developersName + "-button").text("View Bio");
+  }
+  else if ($("#" + bioString).hasClass("hidden")) {
+    $("#" + bioString).className = document.getElementById(bioString).classList.remove("hidden");
+    document.getElementById(infoString).classList.add("hidden");
+    $("#" + developersName + "-button").text("View Info");
   }
 };
 
-var dansButtonTapped = function() {
+var ryansButtonTapped = function() {
+  handleTapForName("ryans");
+};
 
+var dansButtonTapped = function() {
+  handleTapForName("dans");
 };
 
 var patsButtonTapped = function() {
-
+  handleTapForName("pats");
 };
 
 var nicksButtonTapped = function() {
-
+  handleTapForName("nicks");
 };
 
 var setupDevs = function() {

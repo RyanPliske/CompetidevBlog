@@ -5,6 +5,7 @@ var queryString = window.location.hash.substring(1);
 function setup() {
   $( function() { 
     $("#myNavbar").load("navbar.html");
+    $("#developers").load("developers.html");
     $("#footer").load("footer.html", setupAutoScroll);
     setupCarousel();
     requestPost1DescriptionWithCompletion(function() {

@@ -27,7 +27,7 @@ var handleTapForName = function(developersName) {
   else if ($("#" + bioString).hasClass("hidden")) {
     $("#" + bioString).className = document.getElementById(bioString).classList.remove("hidden");
     document.getElementById(infoString).classList.add("hidden");
-    $("#" + developersName + "-button").text("View Info");
+    $("#" + developersName + "-button").text("Contact Info");
   }
 };
 

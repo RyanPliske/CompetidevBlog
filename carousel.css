@@ -11,6 +11,11 @@ body {
   text-indent: 25px;
 }
 
+.invisible {
+    display: none;
+    visibility: hidden;
+}
+
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */

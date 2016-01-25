@@ -5,7 +5,7 @@ var queryString = window.location.hash.substring(1);
 function setup() {
   $( function() { 
     $("#myNavbar").load("navbar.html");
-    $("#developers").load("developers.html");
+    $("#developers").load("developers.html", setupDevs);
     $("#footer").load("footer.html", setupAutoScroll);
     setupCarousel();
     requestPost1DescriptionWithCompletion(function() {
@@ -14,6 +14,23 @@ function setup() {
       });
     });
   });
+};
+
+var ryansButtonTapped = function() {
+  var ryansInfo = $("#ryans-info");
+  if (ryansInfo.hasClass("hidden")) {
+    ryansInfo.className = document.getElementById("ryans-info").classList.remove('hidden');
+    document.getElementById("ryans-bio").classList.add('hidden');
+    $('#ryans-button').text('View Bio');
+  } else {
+    $("#ryans-bio").className = document.getElementById("ryans-bio").classList.remove('hidden');
+    document.getElementById("ryans-info").classList.add('hidden');
+    $('#ryans-button').text('View Info');
+  }
+};
+
+var setupDevs = function() {
+  $("#ryans-button").click(ryansButtonTapped);
 };
 
 var highlight = function() {

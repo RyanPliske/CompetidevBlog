@@ -19,18 +19,33 @@ function setup() {
 var ryansButtonTapped = function() {
   var ryansInfo = $("#ryans-info");
   if (ryansInfo.hasClass("hidden")) {
-    ryansInfo.className = document.getElementById("ryans-info").classList.remove('hidden');
-    document.getElementById("ryans-bio").classList.add('hidden');
-    $('#ryans-button').text('View Bio');
+    ryansInfo.className = document.getElementById("ryans-info").classList.remove("hidden");
+    document.getElementById("ryans-bio").classList.add("hidden");
+    $("#ryans-button").text("View Bio");
   } else {
-    $("#ryans-bio").className = document.getElementById("ryans-bio").classList.remove('hidden');
-    document.getElementById("ryans-info").classList.add('hidden');
-    $('#ryans-button').text('View Info');
+    $("#ryans-bio").className = document.getElementById("ryans-bio").classList.remove("hidden");
+    document.getElementById("ryans-info").classList.add("hidden");
+    $("#ryans-button").text("View Info");
   }
 };
 
+var dansButtonTapped = function() {
+
+};
+
+var patsButtonTapped = function() {
+
+};
+
+var nicksButtonTapped = function() {
+
+};
+
 var setupDevs = function() {
+  $("#nicks-button").click(nicksButtonTapped);
+  $("#pats-button").click(patsButtonTapped);
   $("#ryans-button").click(ryansButtonTapped);
+  $("#dans-button").click(dansButtonTapped);
 };
 
 var highlight = function() {
@@ -94,11 +109,9 @@ var setupAutoScroll = function() {
 var checkURL = function() {
   if (queryString.localeCompare("post2") == 0) {
     document.getElementById("post2").scrollIntoView();
-    // alert(queryString);
   }
 
   if (queryString.localeCompare("post1") == 0) {
     document.getElementById("post1").scrollIntoView();
-    // alert(queryString);
   }
 };

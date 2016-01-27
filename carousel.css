@@ -20,6 +20,12 @@ body {
   border-color: white;
 }
 
+ .code {
+  overflow: auto; 
+  word-wrap: normal; 
+  white-space: pre;
+}
+
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */

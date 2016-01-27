@@ -4,7 +4,7 @@ var queryString = window.location.hash.substring(1);
 
 function setup() {
   $( function() { 
-    $("#myNavbar").load("navbar.html");
+    // $("#myNavbar").load("navbar.html");
     $("#developers").load("developers.html", setupDevs);
     $("#footer").load("footer.html", setupAutoScroll);
     setupCarousel();

@@ -117,19 +117,21 @@ function checkURL() {
 }
 
 function InitialSetupManager() {
-  this.setup = function() {
-    $( function() { 
-      // $("#myNavbar").load("navbar.html");
-      $("#developers").load("developers.html", setupDevs);
-      $("#footer").load("footer.html", setupAutoScroll);
-      setupCarousel();
-      initiallyRequestPostDescriptionWithCompletion("post1", function() {
-        initiallyRequestPostDescriptionWithCompletion("post2", function() {
-          initiallyRequestPostDescriptionWithCompletion("post3", function() {
-            checkURL();
-          });
+
+}
+
+InitialSetupManager.setup = function() {
+  $( function() { 
+    // $("#myNavbar").load("navbar.html");
+    $("#developers").load("developers.html", setupDevs);
+    $("#footer").load("footer.html", setupAutoScroll);
+    setupCarousel();
+    initiallyRequestPostDescriptionWithCompletion("post1", function() {
+      initiallyRequestPostDescriptionWithCompletion("post2", function() {
+        initiallyRequestPostDescriptionWithCompletion("post3", function() {
+          checkURL();
         });
       });
     });
-  }
+  });
 }

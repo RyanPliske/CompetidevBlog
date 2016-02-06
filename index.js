@@ -1,19 +1,30 @@
 "use strict";
 
 var queryString = window.location.hash.substring(1);
+var numberOfPosts = 3;
 
-function setup() {
-  $( function() { 
-    // $("#myNavbar").load("navbar.html");
-    $("#developers").load("developers.html", setupDevs);
-    $("#footer").load("footer.html", setupAutoScroll);
-    setupCarousel();
-    requestPost1DescriptionWithCompletion(function() {
-      requestPost2DescriptionWithCompletion(function() {
-        checkURL();
-      });
+var setupCarousel = function() {
+  $("#myCarousel").load("carousel.html", function() {
+    $("#carouselPost1Button").click( function() {
+      var completion = function() {
+        document.getElementById("post1").scrollIntoView();
+      };
+      requestPostWithCompletion("post1", completion);
+    });
+    $("#carouselPost2Button").click( function() {
+      var completion = function() {
+        document.getElementById("post2").scrollIntoView();
+      };
+      requestPostWithCompletion("post2", completion);
     });
   });
+};
+
+var setupDevs = function() {
+  $("#nicks-button").click(nicksButtonTapped);
+  $("#pats-button").click(patsButtonTapped);
+  $("#ryans-button").click(ryansButtonTapped);
+  $("#dans-button").click(dansButtonTapped);
 };
 
 var handleTapForName = function(developersName) {
@@ -47,62 +58,33 @@ var nicksButtonTapped = function() {
   handleTapForName("nicks");
 };
 
-var setupDevs = function() {
-  $("#nicks-button").click(nicksButtonTapped);
-  $("#pats-button").click(patsButtonTapped);
-  $("#ryans-button").click(ryansButtonTapped);
-  $("#dans-button").click(dansButtonTapped);
-};
-
 var highlight = function() {
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
 };
 
-var requestPost1WithCompletion = function(completion) {
-  $("#post1").load("post1.html", function() {
-    $("#post1-link").click(requestPost1DescriptionWithCompletion);
-    completion();
+var requestPostWithCompletion = function(postString, completion) {
+  $("#" + postString).load(postString + ".html", function () {
+    document.getElementById(postString).scrollIntoView();
+    if (completion) {
+      completion();
+    }
   });
 };
 
-var requestPost2WithCompletion = function(completion) {
-  $("#post2").load("post2.html", function() {
-    highlight();
-    $("#post2-link").click(requestPost2DescriptionWithCompletion);
-    completion();
+var requestPostDescriptionWithCompletion = function(postString, completion) {
+  $("#" + postString).load(postString + "_description.html", function() {
+    document.getElementById(postString).scrollIntoView();
+    if (completion) {
+      completion();
+    }
   });
 };
 
-var requestPost1DescriptionWithCompletion = function(completion) {
-  $("#post1").load("post1_description.html", function() {
-    $("#post1-description-link").click(requestPost1WithCompletion);
-    completion();
-  });
-};
-
-var requestPost2DescriptionWithCompletion = function(completion) {
-  $("#post2").load("post2_description.html", function() {
-    $("#post2-description-link").click(requestPost2WithCompletion);
-    completion();
-  });
-};
-
-var setupCarousel = function() {
-  $("#myCarousel").load("carousel.html", function() {
-    $("#carouselPost1Button").click( function() {
-      var completion = function() {
-        document.getElementById("post1").scrollIntoView();
-      }
-      requestPost1WithCompletion(completion);
-    });
-    $("#carouselPost2Button").click( function() {
-      var completion = function() {
-        document.getElementById("post2").scrollIntoView();
-      }
-      requestPost2WithCompletion(completion);
-    });
+var initiallyRequestPostDescriptionWithCompletion = function(postString, completion) {
+  $("#" + postString).load(postString + "_description.html", function() {
+      completion();
   });
 };
 
@@ -113,6 +95,10 @@ var setupAutoScroll = function() {
 };
 
 var checkURL = function() {
+  if (queryString.localeCompare("post3") == 0) {
+    document.getElementById("post3").scrollIntoView();
+  }
+
   if (queryString.localeCompare("post2") == 0) {
     document.getElementById("post2").scrollIntoView();
   }
@@ -121,3 +107,20 @@ var checkURL = function() {
     document.getElementById("post1").scrollIntoView();
   }
 };
+
+function setup() {
+  $( function() { 
+    // $("#myNavbar").load("navbar.html");
+    $("#developers").load("developers.html", setupDevs);
+    $("#footer").load("footer.html", setupAutoScroll);
+    setupCarousel();
+    initiallyRequestPostDescriptionWithCompletion("post1", function() {
+      initiallyRequestPostDescriptionWithCompletion("post2", function() {
+        initiallyRequestPostDescriptionWithCompletion("post3", function() {
+          checkURL();
+        });
+      });
+    });
+  });
+};
+

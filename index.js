@@ -41,7 +41,7 @@ function DevManager() {
     handleTapForName(dev1);
   };
 
-  var handleTapForName = function(developersName) {
+  function handleTapForName(developersName) {
     var infoString = developersName + "-info";
     var bioString = developersName + "-bio";
     if ($("#" + infoString).hasClass("hidden")) {
@@ -71,7 +71,7 @@ function highlight() {
   });
 }
 
-var requestPostWithCompletion = function(postString, completion) {
+function requestPostWithCompletion(postString, completion) {
   $("#" + postString).load(postString + ".html", function () {
     highlight();
     document.getElementById(postString).scrollIntoView();
@@ -81,7 +81,7 @@ var requestPostWithCompletion = function(postString, completion) {
   });
 };
 
-var requestPostDescriptionWithCompletion = function(postString, completion) {
+function requestPostDescriptionWithCompletion(postString, completion) {
   $("#" + postString).load(postString + "_description.html", function() {
     document.getElementById(postString).scrollIntoView();
     if (completion) {
@@ -90,7 +90,7 @@ var requestPostDescriptionWithCompletion = function(postString, completion) {
   });
 };
 
-var initiallyRequestPostDescriptionWithCompletion = function(postString, completion) {
+function initiallyRequestPostDescriptionWithCompletion(postString, completion) {
   $("#" + postString).load(postString + "_description.html", function() {
       completion();
   });
@@ -119,8 +119,8 @@ function checkURL() {
 function setup() {
   $( function() { 
     // $("#myNavbar").load("navbar.html");
-    $("#developers").load("developers.html", setupDevs());
-    $("#footer").load("footer.html", setupAutoScroll());
+    $("#developers").load("developers.html", setupDevs);
+    $("#footer").load("footer.html", setupAutoScroll);
     setupCarousel();
     initiallyRequestPostDescriptionWithCompletion("post1", function() {
       initiallyRequestPostDescriptionWithCompletion("post2", function() {

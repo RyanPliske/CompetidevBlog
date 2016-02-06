@@ -55,15 +55,16 @@ function DevManager() {
       $("#" + developersName + "-button").text("Contact Info");
     }
   };
-};
 
-function setupDevs() {
+}
+
+DevManager.setupDevs = function() {
   var devManager = new DevManager();
   $("#nicks-button").click(devManager.nicksButtonTapped);
   $("#pats-button").click(devManager.patsButtonTapped);
   $("#ryans-button").click(devManager.ryansButtonTapped);
   $("#dans-button").click(devManager.dansButtonTapped);
-}
+};
 
 function highlight() {
   $('pre code').each(function(i, block) {
@@ -79,7 +80,7 @@ function requestPostWithCompletion(postString, completion) {
       completion();
     }
   });
-};
+}
 
 function requestPostDescriptionWithCompletion(postString, completion) {
   $("#" + postString).load(postString + "_description.html", function() {
@@ -88,7 +89,7 @@ function requestPostDescriptionWithCompletion(postString, completion) {
       completion();
     }
   });
-};
+}
 
 function initiallyRequestPostDescriptionWithCompletion(postString, completion) {
   $("#" + postString).load(postString + "_description.html", function() {
@@ -123,7 +124,7 @@ function InitialSetupManager() {
 InitialSetupManager.setup = function() {
   $( function() { 
     // $("#myNavbar").load("navbar.html");
-    $("#developers").load("developers.html", setupDevs);
+    $("#developers").load("developers.html", DevManager.setupDevs);
     $("#footer").load("footer.html", setupAutoScroll);
     setupCarousel();
     initiallyRequestPostDescriptionWithCompletion("post1", function() {

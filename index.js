@@ -1,7 +1,5 @@
 "use strict";
 
-var queryString = window.location.hash.substring(1);
-
 function DevManager() {
   var dev1 = 'nicks';
   var dev2 = "pats";
@@ -105,6 +103,8 @@ function InitialSetupManager() {
   };
 
   this.checkURL = function() {
+    var queryString = window.location.hash.substring(1);
+    
     if (queryString.localeCompare("post3") == 0) {
       document.getElementById("post3").scrollIntoView();
     }

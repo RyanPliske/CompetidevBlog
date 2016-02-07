@@ -2,23 +2,6 @@
 
 var queryString = window.location.hash.substring(1);
 
-function setupCarousel() {
-  $("#myCarousel").load("carousel.html", function() {
-    $("#carouselPost1Button").click( function() {
-      var completion = function() {
-        document.getElementById("post1").scrollIntoView();
-      };
-      requestPostWithCompletion("post1", completion);
-    });
-    $("#carouselPost2Button").click( function() {
-      var completion = function() {
-        document.getElementById("post2").scrollIntoView();
-      };
-      requestPostWithCompletion("post2", completion);
-    });
-  });
-};
-
 function DevManager() {
   var dev1 = 'nicks';
   var dev2 = "pats";
@@ -91,46 +74,64 @@ function requestPostDescriptionWithCompletion(postString, completion) {
   });
 }
 
-function initiallyRequestPostDescriptionWithCompletion(postString, completion) {
-  $("#" + postString).load(postString + "_description.html", function() {
-      completion();
-  });
-};
-
-function setupAutoScroll() {
-  $("#scrollToTop").click( function() {
-    $('html, body').animate({scrollTop: '0px'}, 300);
-  });
-}
-
-function checkURL() {
-  if (queryString.localeCompare("post3") == 0) {
-    document.getElementById("post3").scrollIntoView();
-  }
-
-  if (queryString.localeCompare("post2") == 0) {
-    document.getElementById("post2").scrollIntoView();
-  }
-
-  if (queryString.localeCompare("post1") == 0) {
-    document.getElementById("post1").scrollIntoView();
-  }
-}
-
 function InitialSetupManager() {
+
+  this.setupCarousel = function() {
+    $("#myCarousel").load("carousel.html", function() {
+      $("#carouselPost1Button").click( function() {
+        var completion = function() {
+          document.getElementById("post1").scrollIntoView();
+        };
+        requestPostWithCompletion("post1", completion);
+      });
+      $("#carouselPost2Button").click( function() {
+        var completion = function() {
+          document.getElementById("post2").scrollIntoView();
+        };
+        requestPostWithCompletion("post2", completion);
+      });
+    });
+  };
+
+  this.initiallyRequestPostDescriptionWithCompletion = function(postString, completion) {
+    $("#" + postString).load(postString + "_description.html", function() {
+        completion();
+    });
+  };
+
+  this.checkURL = function() {
+    if (queryString.localeCompare("post3") == 0) {
+      document.getElementById("post3").scrollIntoView();
+    }
+
+    if (queryString.localeCompare("post2") == 0) {
+      document.getElementById("post2").scrollIntoView();
+    }
+
+    if (queryString.localeCompare("post1") == 0) {
+      document.getElementById("post1").scrollIntoView();
+    }
+  }
+
+  this.setupAutoScroll= function() {
+    $("#scrollToTop").click( function() {
+      $('html, body').animate({scrollTop: '0px'}, 300);
+    });
+  }
 
 }
 
 InitialSetupManager.setup = function() {
+  var initialSetupManager = new InitialSetupManager();
   $( function() { 
     // $("#myNavbar").load("navbar.html");
     $("#developers").load("developers.html", DevManager.setupDevs);
-    $("#footer").load("footer.html", setupAutoScroll);
-    setupCarousel();
-    initiallyRequestPostDescriptionWithCompletion("post1", function() {
-      initiallyRequestPostDescriptionWithCompletion("post2", function() {
-        initiallyRequestPostDescriptionWithCompletion("post3", function() {
-          checkURL();
+    $("#footer").load("footer.html", initialSetupManager.setupAutoScroll);
+    initialSetupManager.setupCarousel();
+    initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post1", function() {
+      initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post2", function() {
+        initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post3", function() {
+          initialSetupManager.checkURL();
         });
       });
     });

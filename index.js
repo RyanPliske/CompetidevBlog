@@ -49,30 +49,35 @@ DevManager.setupDevs = function() {
   $("#dans-button").click(devManager.dansButtonTapped);
 };
 
-function highlight() {
-  $('pre code').each(function(i, block) {
-    hljs.highlightBlock(block);
-  });
+function RequestManager() {
+
 }
 
-function requestPostWithCompletion(postString, completion) {
+RequestManager.highlight = function() {
+  $('pre code').each(function(i, block) {
+    // How did they do this?
+    hljs.highlightBlock(block);
+  });
+};
+
+RequestManager.requestPostWithCompletion = function(postString, completion) {
   $("#" + postString).load(postString + ".html", function () {
-    highlight();
+    RequestManager.highlight();
     document.getElementById(postString).scrollIntoView();
     if (completion) {
       completion();
     }
   });
-}
+};
 
-function requestPostDescriptionWithCompletion(postString, completion) {
+RequestManager.requestPostDescriptionWithCompletion = function(postString, completion) {
   $("#" + postString).load(postString + "_description.html", function() {
     document.getElementById(postString).scrollIntoView();
     if (completion) {
       completion();
     }
   });
-}
+};
 
 function InitialSetupManager() {
 
@@ -82,13 +87,13 @@ function InitialSetupManager() {
         var completion = function() {
           document.getElementById("post1").scrollIntoView();
         };
-        requestPostWithCompletion("post1", completion);
+        RequestManager.requestPostWithCompletion("post1", completion);
       });
       $("#carouselPost2Button").click( function() {
         var completion = function() {
           document.getElementById("post2").scrollIntoView();
         };
-        requestPostWithCompletion("post2", completion);
+        RequestManager.requestPostWithCompletion("post2", completion);
       });
     });
   };
@@ -111,13 +116,13 @@ function InitialSetupManager() {
     if (queryString.localeCompare("post1") == 0) {
       document.getElementById("post1").scrollIntoView();
     }
-  }
+  };
 
   this.setupAutoScroll= function() {
     $("#scrollToTop").click( function() {
       $('html, body').animate({scrollTop: '0px'}, 300);
     });
-  }
+  };
 
 }
 
@@ -136,4 +141,4 @@ InitialSetupManager.setup = function() {
       });
     });
   });
-}
+};

@@ -1,25 +1,21 @@
 "use strict";
 
 function DevManager() {
-  var dev1 = 'nicks';
-  var dev2 = "pats";
-  var dev3 = "ryans";
-  var dev4 = "dans";
 
   this.ryansButtonTapped = function() {
-    handleTapForName(dev3);
+    handleTapForName("ryans");
   }
 
   this.dansButtonTapped = function() {
-    handleTapForName(dev4);
+    handleTapForName("dans");
   }
 
   this.patsButtonTapped = function() {
-    handleTapForName(dev2);
+    handleTapForName("pats");
   }
 
   this.nicksButtonTapped = function() {
-    handleTapForName(dev1);
+    handleTapForName("nicks");
   }
 
   function handleTapForName(developersName) {
@@ -104,7 +100,7 @@ function InitialSetupManager() {
 
   this.checkURL = function() {
     var queryString = window.location.hash.substring(1);
-    
+
     if (queryString.localeCompare("post3") == 0) {
       document.getElementById("post3").scrollIntoView();
     }

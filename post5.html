@@ -1,0 +1,45 @@
+<hr class="featurette-divider">
+<h2 class="featurette-heading">Git Ignores</h2>
+<h4>by <a href="http://ryanpliske.com/" target = "_blank">Ryan Pliske</a> on December 31, 2015</h4>
+<p class="lead">
+	It doesn't matter if you're developing a game using Microsoft Visual Studio, or building an iOS application in Xcode, sooner or later you're going to be developing on a team. Regardless of whether you choose SVN, Git or something else for your version control, there are going to be some files you want to keep on your local machine and never pushed to your shared server.  
+</p>
+<p class="lead">
+	If you choose to use git for your version control, you can accomplish this by setting up a <b>.gitignore</b> file. This file should be in the same directory that your .git folder is located.
+</p>
+<p class="lead">
+	In iOS applications, I find it works best if you ignore your.xcuserstate data. This data contains information like breakpoints that you set or any schemes that you've created. 
+</p>
+<p class="lead">
+	Additionally, if you're using Cocoapods, I find it best if you don't push your pods directory to your repository. The only file relevant to your pods that you want in your repository is your Podfile and your Podfile.lock. If you end up keeping your /Pods folder in your repository, whenever a teammate installs or updates Cocoapods on their local machine, they'll end up messing up everyones.
+</p>
+<p class="lead">
+		I just recently had a friend mess up their build and it took 3 of us to fix the problem. He had updated pods on his local machine, pushed it to the GitLab server and it absolutely demolished their automated project build (we have an automated system at work where our server builds our project and can archive it's .ipa file for our internal app store).  Personally I will never use Cocoapods ever again, but that's just my personal opinion. 
+</p>
+<p class="lead">
+	Lastly, If you've already published your git repository, you will most likely have to edit your git cache. Assuming you're using a unix system, you can do this by:
+</p>
+<blockquote>
+	git rm -r --cached path_to_file/
+</blockquote>
+<p class="lead">
+	If you're unfamiliar with a unix command line, you can easily find the path to your folder by typing the command: <b>pwd</b>. Actually you can do some more cool stuff with a unix command line. I'll write another blog about it soon.
+</p>
+<p class="lead">
+	Below I've included an example for a .gitignore file:
+</p>
+<blockquote>
+	*.pbxuser</br>
+	*.mode1v3</br>
+	*.mode2v3</br>
+	*.perspectivev3</br>
+	*.xcuserstate</br>
+	<i>ProjectName</i>.xcworkspace/</br>
+	xcuserdata/</br>
+	# Pods - for those of you using CocoaPods</br>
+	Pods/</br>
+</blockquote>
+<p class="lead">
+	A little unrelated but still relevant, storyboard files can turn into a nuisance when attempting to solve merge conflicts. It's usually a good idea to split up your storyboards: <a href="http://www.raywenderlich.com/115697/ios-9-storyboards-tutorial-whats-new-in-storyboards" target="_blank">More Info Here</a>.
+</p>
+<a class="lead" onclick="RequestManager.requestPostDescriptionWithCompletion('post5')">Less...</a>

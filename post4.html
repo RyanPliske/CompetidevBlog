@@ -1,0 +1,111 @@
+<hr class="featurette-divider">
+<h2 class="featurette-heading">tvOS Development</h2>
+<h4>by <a href="http://ryanpliske.com/" target = "_blank">Ryan Pliske</a> on January 5, 2016</h4>
+<p class="lead">
+	Apple has provided us with new tools to develop apps for the 4th Generation Apple TV: TVML, TVJS and TVMLKit. I followed a Ray Wenderlich <a href="http://www.raywenderlich.com/114886/beginning-tvos-development-with-tvml-tutorial" target="_blank">tutorial</a>, but I always modify them by writing cleaner code and taking them a few steps further.
+</p>
+<p class="lead">
+    We are developing both an iOS and tvOS multiplayer game. These will be two separate, but related applications. My plan for the AppleTV version is to spin up a server which will serve TVML to my user's AppleTV in order to display the main menu for the game.
+</p>
+<p class="lead">
+    Once they've selected their character, I want to load the game using a <span class="blog-class">GameScene</span> (SpriteKit). When the game is over we'd come back to the main menu (TVML). I've added this ability to my spike and have made the <b>full</b> version available <a href="https://github.com/RyanPliske/AppleTVSpike" target="_blank">Here</a>. I'll briefly go over a few of the important parts for this blog. Let's go!
+</p>
+<p class="lead">
+	Firstly, my <span class="blog-class">AppDelegate</span> takes advantage of the <i>didFinishLaunchingWithOptions</i> method which is called by <span class="blog-class">UIApplication</span> when the tvOS app is done initially spinning up. It's main purpose is to create the <span class="blog-class">UIWindow</span> and <span class="blog-myclass">MyTVApp</span> and hold onto these objects.
+</p>
+<pre><code class="swift code">@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+    var tvApp: MyTVApp!
+    
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        tvApp = MyTVApp(window: window!)
+        return true
+    }
+}
+</code></pre>
+<p class="lead">
+	Secondly, I created a custom protocol, <span class="blog-myclass">MyTVAppControllerDelegate</span> that I created by extending Apple's protocol <span class="blog-class">TVApplicationControllerDelegate</span>. Out of the box, Apple's delegate simply listens to if and when the server responds with my main menu's TVML. I've modified it so that it can also listen to custom methods that I call from my Javascript. That way I can call <span style="color:#ff6600">gameStarted(str)</span> from my <b>Javascript</b> and <b>Swift</b> will receive that notification. It's magic! (This ability has been around for a while. So nothing is really new here.)
+</p>
+<pre><code class="swift code">import TVMLKit
+
+protocol MyTVAppControllerDelegate: class, TVApplicationControllerDelegate {
+    
+    func gameDidStartWithMessage(message: String)
+    
+}
+</code></pre>
+<p class="lead">
+    Thirdly, <span class="blog-myclass">MyTVApp</span> adheres to this delegate so that it will receive the <span style="color:#ff6600">gameStarted(str)</span> JS notification. Here I can simply present the <span class="blog-class">GameScene</span> controlled by a <span class="blog-class">UIViewController</span>.
+</p>
+
+
+<pre><code class="swift code">import TVMLKit
+
+class MyTVApp: NSObject, MyTVAppControllerDelegate {
+    
+    var appController: MyTVAppController!
+    
+    init(window: UIWindow) {
+        super.init()
+        appController = MyTVAppController(window: window, delegate: self)
+    }
+
+    func appController(appController: TVApplicationController, didFinishLaunchingWithOptions options: [String : AnyObject]?) {
+        self.appController.setupGameStartedListener()
+    }
+
+    func gameDidStartWithMessage(message: String) {
+        print(message)
+        let viewController = UIViewController()
+        viewController.view.backgroundColor = UIColor.blueColor()
+        self.appController.navigationController.presentViewController(viewController, animated: true, completion: nil)
+    }
+}
+</code></pre>
+<p class="lead">
+    Lastly, the meat and potatoes. <span class="blog-myclass">MyTVAppController</span> does all of the real work. This object is new, but it utilizes the old JavaScriptCore framework. It is the bridge between JS and Swift. Apple's Documentation states:
+</p>
+<blockquote>
+    The <span class="blog-class">TVApplicationController</span> class establishes the JavaScript environment to provide a centralized point of control and co-ordination. The class bridges the UI, navigation stack, storage and event handling from JavaScript.
+</blockquote>
+<p class="lead">
+    By subclassing this class, I've added all my initialization here. Take a look at the code and then I'll explain it below.
+</p>    
+<pre><code class="swift code">import TVMLKit
+// 1
+private typealias JavascriptClosure = (JSContext) -> Void
+// 2
+private typealias ObjectivecCompletionBlock = @convention(block) (String) -> Void
+// 3
+private let TVBaseURL = "http://localhost:9001/"
+
+class MyTVAppController: TVApplicationController {
+    
+    // 4
+    func setupGameStartedListener() {
+        let gameStarted: JavascriptClosure = {
+            [unowned self](context: JSContext) -> Void in
+            let objCompletion: ObjectivecCompletionBlock = {
+                (str: String) -> Void in
+                (self.delegate as? MyTVAppControllerDelegate)?.gameDidStartWithMessage(str)
+            }
+            context.setObject(unsafeBitCast(objCompletion, AnyObject.self), forKeyedSubscript: "gameStarted")
+        }
+        evaluateInJavaScriptContext(gameStarted, completion: nil)
+    }
+}
+</code></pre>
+<p class="lead">
+    <ol type="1">
+        <li>In Swift you can declare a closure as a type. In my closure, I pass in my controller's <span class="blog-class">JSContext</span>. This context supplies information to <span class="blog-myclass">MyTVAppController</span> from my JS.</li>
+        <li>In Swift, <span class="blog-class">AnyObject</span> is actually an Obj-C protocol that can represent an instance of any class type. The <span class="blog-class">JSContext</span> has a method called <b>setObject(object: AnyObject!)</b> which accepts AnyObject. Swift closures do not adhere to AnyObject because it is a swift feature and not Obj-C. Thus, I first have to declare it as an Obj-C block. We do this with <span class="blog-class">@convention</span>. What this actually does is it is imports your swift type as a C function pointer (If you're not familar with C a pointer just points to a memory address, in this case a function). This pointer can then point to my Swift closure. Then we can use cast it to AnyObject using unsafeBitCast. <b>setObject(object: AnyObject!)</b> can then accept my block.</li>
+        <li>This is where I've declared the path to my server.</li>
+        <li>The <b>evaluteInJavaScriptContext</b> method adds a block to the JavaScript execution queue and invokes the completion block after the evaluation block has finished execution. This enables us to create a function on a server which can be called using JS. In this case I've decalred my function as <span style="color:#ff6600">gameStarted(str)</span>.</li>
+    </ol> 
+</p> 
+<p class="lead">
+    And that's about it. Feel free to take a look at the <a href="https://github.com/RyanPliske/AppleTVSpike" target="_blank">source code</a> and use it at your convenience.
+</p>
+<a class="lead" onclick="RequestManager.requestPostDescriptionWithCompletion('post4')">Less...</a>

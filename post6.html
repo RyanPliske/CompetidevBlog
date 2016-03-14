@@ -1,0 +1,73 @@
+<hr class="featurette-divider">
+<h2 class="featurette-heading">Protocol-Oriented Programming</h2>
+<h4>by <a href="http://ryanpliske.com/" target = "_blank">Ryan Pliske</a> on March 14, 2016</h4>
+<p class="lead">
+	I first watched WWDC 2015's Protocol-Oriented Programming last summer (I think). I was working in Obj-C at that time so it didn't hit me until a little bit ago how useful of a concept this is. I hope this blog can present a simple but concrete example on how we can use these puppies.
+</p>
+<p class="lead">
+	So now we can extend protocols.</br>
+	Who's protocols? </br>
+	Yours!...And also Apple's and any imported frameworks you decide to import into your project.
+</p>
+<p class="lead">
+	Why should you care?</br>
+	Well firstly, extensions are extremely powerful. They give you the ability to add further implementations to code that isn't yours. Wether that's a 3rd party framework or a teammates code, in Swift you can basically extend anything.</br></br>
+	Secondly, protocols are extremely powerful. I've learned to code defensively. What better way is there than to develop a protocol, from which other objects can adhere to?</br></br>
+	Thirdly, when you put these two things together, you now have this ability to create default implementations. When you start to play with them, you start realizing how closely related this is to creating a base class, or an abstract class like in Java. So this should seem very similar. But, the nice thing is <i>types</i> can be extended including structs and enums and <b>not just classes</b>. Not only that, they can adhere to multiple protocols which is similar to multiple inheritance in other languages. The nice thing here is protocol extensions don't add any additional state. 
+</p>
+</p>
+<p class="lead">
+	There are plenty of blogs about this concept. Ray Wenderlich had one early on found <a href="https://www.raywenderlich.com/109156/introducing-protocol-oriented-programming-in-swift-2" target="_blank">here</a>. They do a nice job showing a cool extension of an Apple type. But, let me show you something I made. I've been writing UI Tests for our app that we're developing at Monsanto Company. Our App is completely localized so that our users anywhere in the world can read our app in their native language. So I created an enum called Language. Take a look at it and I'll explain more below.
+</p>
+<pre><code class="swift code">enum Language: Int, UITestableLanguage, Countable {
+    case English
+    case Ukranian
+    case Russian
+    case Spanish
+    case Spanish_Mexico
+    case Portuguese_Brazil
+    case Portuguese_Portugal
+    
+    static var selectedLanguage = Language.readUITestLanguage() ?? Language.selectRandom() as! Language
+}
+</code></pre>
+<p class="lead">
+	My friend and teammate <a href="https://twitter.com/eryncantrell" target="_blank">Eryn</a> setup our OSX Server which runs our UI Tests every night at 3am. He wrote A python script which writes to a plist which language we want to test at that time. Our Swift code then reads from that plist. The code above simply tries to read in that language from the plist. If it fails, then it'll simply select a random language. Note: this enum does not declare any methods. The methods are given to them by default by their protocol extensions. Now let's take a look at these badass protocols!
+</p>
+<pre><code class="swift code">protocol Countable {
+    
+}
+
+extension Countable where Self: RawRepresentable, Self.RawValue == Int {
+    
+    static func countCases() -> Int {
+        var count = 0
+        while let _ = Self(rawValue: count) { count++ }
+        return count
+    }
+    
+    static func selectRandom() -> Countable {
+        return Self(rawValue: self.randomValue())!
+    }
+    
+    private static func randomValue() -> Int {
+        let min = 0
+        let max = self.countCases()
+        return Int(arc4random_uniform(UInt32(max - min)) + UInt32(min))
+    }
+    
+}
+</code></pre>
+<p class="lead">
+	Firstly, let's look at the <i>where</i> clause. In Swift 2, we can add conditions. Here I want anyone who adheres to my Countable protocol to also adhere to RawRepresentable and have a rawValue of type Int. Thus, my Language enum must return type Int. Which it does. Go look at it again. If my enum didn't have these initial conditions, then my countable protocol wouldn't work. So this way I can force it to. Pretty neat.
+</p>
+<p class="lead">
+	Secondly, Countable can be included by any enum that returns a raw value of type Int. As we keep adding more languages, the countCases() method will always return the number of cases that my Language Enum has. I'm not going to include our implementation of the protocol UITestableLanguage which contains the method readUITestLanguage(), but you should just see how we can split up default implementations similarly how you might accomplish the same thing using multiple inheritance in other languages.
+</p>
+<p class="lead">
+	In summary, we don't really need classes (like ever). The only really reason we need them in Swift is because of Objective-C. Swift itself is a protocol-oriented language. My enum Language acts just like a class. It can't have stored properties, but using <i>static</i> I added selectedLanguage which kind of acts like a lazy var on an instantiated object. But we don't really need an object here. This enum does the job <i>better</i> than a class would have and it makes more sense this way. If a class doesn't really make sense, look to use protocols.
+</p>
+<p class="lead">
+	One thing I didn't touch on, is the fact that you can pass protocols as an argument instead of the type. So any type that adheres to that protocol is fair game to pass in as a parameter to a method. Thus in this case, I wouldn't have to pass in an instantiated <i>Language object</i> to a method. I could just as easily pass in my Language enum. Keep in mind that when you pass in a class type, you're passing by reference. Whereas when you're passing structs or enums, you're passing by value (or copying). Sometimes you <i>do</i> want to copy things. Functional programming is all about immutability. Since Swift has some funtional capabilities, it only make sense that we'd have tools such as protocol extensions.
+</p>
+<a class="lead" onclick="RequestManager.requestPostDescriptionWithCompletion('post6')">Less...</a>

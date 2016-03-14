@@ -89,6 +89,12 @@ function InitialSetupManager() {
         };
         RequestManager.requestPostWithCompletion("post2", completion);
       });
+      $("#carouselPost6Button").click( function() {
+        var completion = function() {
+          document.getElementById("post6").scrollIntoView();
+        };
+        RequestManager.requestPostWithCompletion("post6", completion);
+      });
     });
   };
 

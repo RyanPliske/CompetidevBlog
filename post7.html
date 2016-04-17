@@ -1,0 +1,43 @@
+<hr class="featurette-divider">
+<h2 class="featurette-heading">Animations with Auto Layout</h2>
+<h4>by <a href="http://ryanpliske.com/" target = "_blank">Ryan Pliske</a> on April 17, 2016</h4>
+<p class="lead">This is a short tutorial on animating views using autolayout instead of frames...more specifically, moving a view across the screen. A coworker of mine, David Vaughn, has implemented a sliding drawer menu, that can slide into the current view from the left side of the screen. I took a look at his code and made one that slides in from the right. I've done this previously with frames, but he found a way to do it using Auto Layout. So all props goes to him. I just wanted to share it with everyone. 
+</p>
+<p class="lead">Briefly, you can draw the view outside of the current view by giving your view a height and width. You then want to set it so that it's sitting just off to the right of the screen. You do this by settings it's trailing Constraint equal to the width of your drawer. To bring it into view all you have to do is change the trailing Contraint's value to 0 and call layoutIfNeeded(). That's it. 
+</p>
+<p class="lead">
+    Now let's do this in code. You can set the height and width constraints either programatically or in Storyboard. Let's assume I've set them in Storyboard. So in your parent view controller, all you'd have to do is something like this...
+</p>
+<pre><code class="swift code">func presentRightMenu() {
+    let menuStoryboard = UIStoryboard(name: "RightMenu", bundle: nil)
+    if let viewcontroller = menuStoryboard.instantiateInitialViewController() as? RightMenuViewController {
+        // Parent View Controller will hold onto this View Controller 
+        self.rightMenuController = viewcontroller
+        rightMenuController!.delegate = self
+        
+        rightMenuController!.willMoveToParentViewController(self)
+        addChildViewController(rightMenuController!)
+        self.view.insertSubview(rightMenuController!.view, aboveSubview: captureView)
+        rightMenuController!.didMoveToParentViewController(self)
+    }
+}
+</code></pre>
+<p class="lead">
+    Then in your RightMenuViewController, you'd want to make an Interface Builder outlet in order to hold on to that trailing constraint. Using the VC's lifecycle, you can choose to animate it when the view first appears by overriding viewDidAppear.
+</p>
+<pre><code class="swift code">class RightMenuViewController: UIViewController {
+    @IBOutlet weak var trailingConstraint: NSLayoutConstraint!
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        trailingConstraint.constant = 0
+        UIView.animateWithDuration(0.25) { () -> Void in
+            self.view.layoutIfNeeded()
+        }
+    }
+}
+</code></pre>
+<p class="lead">
+    <a href="https://github.com/dvaughn1712/swift-slidemenu-navigation" target="_blank">Here</a> is a link to David's example Menu View Controller.
+</p>
+<a class="lead" onclick="RequestManager.requestPostDescriptionWithCompletion('post7')">Less...</a>

@@ -10,10 +10,6 @@ function DevManager() {
     handleTapForName("dans");
   }
 
-  this.patsButtonTapped = function() {
-    handleTapForName("pats");
-  }
-
   this.nicksButtonTapped = function() {
     handleTapForName("nicks");
   }
@@ -38,7 +34,6 @@ function DevManager() {
 DevManager.setupDevs = function() {
   var devManager = new DevManager();
   $("#nicks-button").click(devManager.nicksButtonTapped);
-  $("#pats-button").click(devManager.patsButtonTapped);
   $("#ryans-button").click(devManager.ryansButtonTapped);
   $("#dans-button").click(devManager.dansButtonTapped);
 };
@@ -141,7 +136,9 @@ InitialSetupManager.setup = function() {
           initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post4", function() {
             initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post5", function() {
               initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post6", function() {
-                initialSetupManager.checkURL();
+                initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post7", function() {
+                  initialSetupManager.checkURL();
+                });
               });
             });
           });

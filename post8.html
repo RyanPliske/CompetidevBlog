@@ -7,7 +7,7 @@
 	My first instinct was to create a delegate, where the manager always ask the model for the array. But this <i>can</i> also be solved with pointers.
 </p>
 <p class="lead">
-	In this made-up situation, the car model will hold onto an array of cars, a manager and a drawer. The manager will take care of manipulating the model's array, while the drawer is in charge of telling the CarView how to draw certain things in our array. This way we have a division of labor and can have a smaller model.
+	In this made-up situation, the car model will hold onto an array of cars, a manager and a drawer. The manager will take care of manipulating the model's array, while the drawer is in charge of telling the CarView <i>how</i> to draw the cars on the map. (Let's say we're building an app like Uber). This way we have a division of labor and can have a smaller model.
 </p>
 <pre><code class="swift code">class Car {
     
@@ -67,7 +67,7 @@ model.manager.unsafeArray.memory.count // 5
 let copyOfCars: [Car] = model.manager.unsafeArray.memory
 model.manager.addACar()
 
-copyOfCars.count // Copy stats at 5
+copyOfCars.count // Copy stays at 5
 model.cars.count // 6
 model.manager.unsafeArray.memory.count // 6
 </code></pre>

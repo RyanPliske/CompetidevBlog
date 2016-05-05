@@ -137,7 +137,9 @@ InitialSetupManager.setup = function() {
             initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post5", function() {
               initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post6", function() {
                 initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post7", function() {
-                  initialSetupManager.checkURL();
+                  initialSetupManager.initiallyRequestPostDescriptionWithCompletion("post8", function() {
+                    initialSetupManager.checkURL();
+                  });
                 });
               });
             });

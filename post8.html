@@ -1,0 +1,83 @@
+<hr class="featurette-divider">
+<h2 class="featurette-heading">Pointers In Swift</h2>
+<h4>by <a href="http://ryanpliske.com/" target = "_blank">Ryan Pliske</a> on May 5, 2016</h4>
+<p class="lead">This is a short iOS playground discussion about Pointers in Swift. <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/InteractingWithCAPIs.html" target="_blank">Apple's Documentation</a> would suggest that they don't want us to use pointers, but sometimes it's really up to us to decide whether we should apply them in our code. CompetiDev is building a game and needed access to function pointers and my team at Monsanto looked into pointers to see if we could trim down an ever growing model that we're building out. This week one of our models grew past 1200 lines. So I figured we'd start splitting up the model into little chunks.   
+</p>
+<p class="lead">
+	My first instinct was to create a delegate, where the manager always ask the model for the array. But this <i>can</i> also be solved with pointers.
+</p>
+<p class="lead">
+	In this made-up situation, the car model will hold onto an array of cars, a manager and a drawer. The manager will take care of manipulating the model's array, while the drawer is in charge of telling the CarView how to draw certain things in our array. This way we have a division of labor and can have a smaller model.
+</p>
+<pre><code class="swift code">class Car {
+    
+    var index = 0
+    
+    init(index: Int) {
+        self.index = index
+    }
+}
+
+class CarModel {
+    
+    private var cars = [Car]() // Model is not held responsible for manipulating array
+    private let manager: CarManager // Manager will manipulate the array
+    
+    init() {
+        manager = CarManager(inArray: &cars) // Manager is given pointer to array
+    }
+    
+    func addACar() {
+        manager.addACar()
+    }
+}
+
+class CarManager {
+    
+    private var unsafeArray: UnsafeMutablePointer<[Car]>
+    
+    init(inArray: UnsafeMutablePointer<[Car]>) {
+        self.unsafeArray = inArray
+    }
+    
+    func addACar() {
+        let newCar = Car(index: unsafeArray.memory.count + 1)
+        unsafeArray.memory.append(newCar)
+    }
+    
+    deinit {
+        unsafeArray.dealloc(1)
+    }
+}
+
+
+let model = CarModel()
+for _ in 0...3 {
+    model.addACar() // add 4 cars
+}
+
+model.cars.count // 4
+model.manager.unsafeArray.memory.count // 4
+
+model.manager.addACar()
+
+model.cars.count // 5
+model.manager.unsafeArray.memory.count // 5
+
+let copyOfCars: [Car] = model.manager.unsafeArray.memory
+model.manager.addACar()
+
+copyOfCars.count // Copy stats at 5
+model.cars.count // 6
+model.manager.unsafeArray.memory.count // 6
+</code></pre>
+<p class="lead">
+	Throw this in a playground and check it out. Notice, Swift casts your pointer to the correct type when you access it's memory. Because this is a raw pointer, you have to manually manage it's memory by allocating and remembering to deallocating it when you're done.
+</p>
+<p class="lead">
+	Although I do in fact like this implementation, we decided not to go this route in our application. Instead we passed in the array to our manager using Swift's <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Declarations.html#//apple_ref/doc/uid/TP40014097-CH34-ID545" target="_blank">in-out parameters</a>. Perhaps if another situation arrises, we'll look into this further. Note: that Memory will turn into Pointee in Swift 3.0. Documented <a href="http://swiftdoc.org/v3.0/type/UnsafePointer/" target="_blank">here</a>.
+</p>
+<p class="lead">
+	Happy Cinco De Mayo!
+</p>
+<a class="lead" onclick="RequestManager.requestPostDescriptionWithCompletion('post8')">Less...</a>
